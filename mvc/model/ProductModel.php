@@ -118,7 +118,14 @@ class ProductModel extends Model
     public function updateItem($data,$id)
     {
         $weburl = "/public/img/";
-        $data['coverImage']= $weburl . $data['coverImage'];
+        if(!empty($data['coverImage'])) {
+            $data['coverImage']= $weburl . $data['coverImage'];
+        }else {
+            $queryUrl = "SELECT cover_image_url FROM comics WHERE comic_id = ".$id;
+            $curUrl = $this->db->query($queryUrl)->fetch(PDO::FETCH_ASSOC);
+            $data['coverImage'] = $curUrl['cover_image_url'];
+        }
+
         $id=(int) $id;
         $sql = "UPDATE comics SET 
                 author_name = '" . $data['authorName'] . "', 
