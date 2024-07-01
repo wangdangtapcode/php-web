@@ -64,16 +64,8 @@ DELIMITER //
 CREATE TRIGGER generate_token BEFORE INSERT ON users
 FOR EACH ROW
 BEGIN
-    DECLARE token_value VARCHAR(10) DEFAULT '';
-
-    SET token_value = SUBSTRING(MD5(RAND()), 1, 10);
-    
-    WHILE EXISTS (SELECT 1 FROM users WHERE token = token_value) DO
-        SET token_value = SUBSTRING(MD5(RAND()), 1, 10);
-    END WHILE;
-    
-    SET NEW.token = token_value;
-END;
+    SET NEW.token = SUBSTRING(MD5(RAND()), 1, 10);
+END //
 
 DELIMITER ;
 INSERT INTO users (fullname, username, password,role_id) 
